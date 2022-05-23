@@ -1,25 +1,21 @@
-﻿using System;
+﻿using NewCRM.Controllers;
+using System;
 
 namespace NewCRM.View
 {
-    public class MainMenu
+    public class MainMenu : IUserInterface<object>
     {
-        private static MainMenu _Instance;
-        public static MainMenu Instance
+        private readonly ICustomerController _customerController;
+        public MainMenu
+        (
+            ICustomerController customerController
+        )
         {
-            get
-            {
-                if (_Instance == null)
-                {
-                    _Instance = new MainMenu();
-                }
-                return _Instance;
-            }
-            private set { }
+            _customerController = customerController;
         }
 
         //Show main menu
-        public void Show()
+        public void Show(object entity)
         {
             Console.WriteLine("Menu:");
             Console.WriteLine("1. View list Customer");
@@ -33,7 +29,7 @@ namespace NewCRM.View
         }
 
         //Process input selection
-        public string InputSelection()
+        public string InputSelection(string output)
         {
             Console.Write("Your selection: ");
             return Console.ReadLine();
@@ -46,19 +42,27 @@ namespace NewCRM.View
             {
                 //Define method view list customer
                 case "1":
-                    //if (ViewListCustomer.Instance.View()) return true;
+                    _customerController.OnGet();
+                    if (ConfirmContinue()) return true;
                     break;
                 //Define method view detail an existing customer
                 case "2":
-                    //if (DetailCustomer.Instance.View()) return true;
+                    var id = InputID();
+                    if (ValidateID(id) == -1) return true;
+                    else _customerController.OnDetails(ValidateID(id));
+                    if (ConfirmContinue()) return true;
                     break;
                 //Define method add a new customer
                 case "3":
-                    //if (CreateCustomer.Instance.View()) return true;
+                    _customerController.OnCreate();
+                    if (ConfirmContinue()) return true;
                     break;
                 //Define method edit an existing customer
                 case "4":
-                    //if (UpdateCustomer.Instance.View()) return true;
+                    id = InputID();
+                    if (ValidateID(id) == -1) return true;
+                    _customerController.OnUpdate(ValidateID(id));
+                    if (ConfirmContinue()) return true;
                     break;
                 //Define method delete an existing customer
                 case "5":
@@ -84,6 +88,33 @@ namespace NewCRM.View
                     if (confirm == "1") return true;
                     break;
             }
+            return false;
+        }
+        public string InputID()
+        {
+            Console.Write("Enter ID Customer: ");
+            return Console.ReadLine();
+            
+        }
+        public int ValidateID(string id)
+        {
+            if (int.TryParse(id, out int parseId))
+            {
+                return parseId;
+            }
+            else
+            {
+                Console.WriteLine("Invalid ID!");
+                Console.WriteLine("");
+                Console.WriteLine("");
+            }
+            return -1;
+        }
+        public bool ConfirmContinue()
+        {
+            Console.WriteLine("Do you want to continues: ");
+            string confirm = Console.ReadLine();
+            if (confirm == "1") return true;
             return false;
         }
     }

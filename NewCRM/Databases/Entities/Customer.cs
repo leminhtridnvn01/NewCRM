@@ -12,7 +12,7 @@ namespace NewCRM.Databases.Entities
         [Key]
         public int customerID { get; set; }
         public string name { get; set; }
-        public string age { get; set; }
+        public string yearOfBirth { get; set; }
         public List<ContactAddress> Contact { get; set; }
     }
 }

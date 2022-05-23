@@ -5,23 +5,6 @@ namespace NewCRM.Databases
 {
     public class Context : DbContext
     {
-        private static Context _Instance;
-        public static Context Instance
-        {
-            get
-            {
-                if (_Instance == null)
-                {
-                    _Instance = new Context();
-                }
-                return _Instance;
-            }
-            private set { }
-        }
-
-        private Context()
-        {
-        }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<ContactAddress> ContactAddresses { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
