@@ -29,12 +29,11 @@ namespace NewCRM.Repositories
             var l = db.Set<T>().Add(entity);
             db.SaveChanges();
         }
-        public void Update(int id, T entity)
+        public void Update(T entity)
         {
             using (Context db = new Context())
             {
-                var l = db.Set<T>().Find(id);
-                db.Entry(l).CurrentValues.SetValues(entity);
+                db.Set<T>().Update(entity);
                 db.SaveChanges();
             }
         }

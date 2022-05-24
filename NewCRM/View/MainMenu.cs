@@ -6,12 +6,15 @@ namespace NewCRM.View
     public class MainMenu : IUserInterface<object>
     {
         private readonly ICustomerController _customerController;
+        private readonly IContactAddressController _contactAddressController;
         public MainMenu
         (
-            ICustomerController customerController
+            ICustomerController customerController,
+            IContactAddressController contactAddressController
         )
         {
             _customerController = customerController;
+            _contactAddressController = contactAddressController;
         }
 
         //Show main menu
@@ -31,7 +34,7 @@ namespace NewCRM.View
         //Process input selection
         public string InputSelection(string output)
         {
-            Console.Write("Your selection: ");
+            Console.Write(output + ": ");
             return Console.ReadLine();
         }
 
@@ -47,7 +50,7 @@ namespace NewCRM.View
                     break;
                 //Define method view detail an existing customer
                 case "2":
-                    var id = InputID();
+                    var id = InputSelection("Enter ID Customer: ");
                     if (ValidateID(id) == -1) return true;
                     else _customerController.OnDetails(ValidateID(id));
                     if (ConfirmContinue()) return true;
@@ -59,22 +62,29 @@ namespace NewCRM.View
                     break;
                 //Define method edit an existing customer
                 case "4":
-                    id = InputID();
+                    id = InputSelection("Enter ID Customer: ");
                     if (ValidateID(id) == -1) return true;
                     _customerController.OnUpdate(ValidateID(id));
                     if (ConfirmContinue()) return true;
                     break;
                 //Define method delete an existing customer
                 case "5":
-                    //if (DeleteCustomer.Instance.View()) return true;
+                    id = InputSelection("Enter ID Customer: ");
+                    if (ValidateID(id) == -1) return true;
+                    _customerController.OnDelete(ValidateID(id));
+                    if (ConfirmContinue()) return true;
                     break;
                 //Define method add a new contact address for an existing customer
                 case "6":
-                    //if (CreateContactAddress.Instance.View()) return true;
+                    _contactAddressController.OnCreate();
+                    if (ConfirmContinue()) return true;
                     break;
                 //Define method edit contact address for an existing customer
                 case "7":
-                    //if (UpdateContactAddress.Instance.View()) return true;
+                    id = InputSelection("Enter ID Customer: ");
+                    if (ValidateID(id) == -1) return true;
+                    _contactAddressController.OnUpdate(ValidateID(id));
+                    if (ConfirmContinue()) return true;
                     break;
                 //Define method delete contact address for an existing customer
                 case "8":
@@ -89,12 +99,6 @@ namespace NewCRM.View
                     break;
             }
             return false;
-        }
-        public string InputID()
-        {
-            Console.Write("Enter ID Customer: ");
-            return Console.ReadLine();
-            
         }
         public int ValidateID(string id)
         {

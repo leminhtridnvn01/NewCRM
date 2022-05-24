@@ -30,12 +30,6 @@ namespace NewCRM.View
                 Console.WriteLine("");
                 Console.WriteLine("");
             }
-
-            ////2. Confirm continue
-            //Console.WriteLine("Do you want to continues: ");
-            //string confirm = Console.ReadLine();
-            //if (confirm == "1") return true;
-            //return false;
         }
         public string InputSelection(string output)
         {

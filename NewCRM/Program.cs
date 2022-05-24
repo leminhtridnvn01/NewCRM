@@ -25,8 +25,10 @@ namespace NewCRM
                 .AddSingleton<IUserInterface<Customer>, DetailCustomer >()
                 .AddSingleton<IUserInterface<Customer>, CreateUpdateCustomer >()
                 .AddSingleton<ICustomerController, CustomerController>()
+                .AddSingleton<IContactAddressController, ContactAddressController>()
                 .AddSingleton<ICustomerRepository<Customer>, CustomerRepository<Customer>>()
                 .AddSingleton<ICustomerService, CustomerService>()
+                .AddSingleton<IContactAddressService, ContactAddressService>()
                 .AddSingleton<IContactAddressRepository<ContactAddress>, ContactAddressRepository<ContactAddress>>()
                 .BuildServiceProvider();
             while (true)
@@ -35,12 +37,10 @@ namespace NewCRM
                 var i = serviceProvider.GetService<CustomerService>();
                 serviceProvider.GetService<IUserInterface<object>>().Show(null);
                 //2. Input seletion
-                var input = serviceProvider.GetService<IUserInterface<object>>().InputSelection("");
+                var input = serviceProvider.GetService<IUserInterface<object>>().InputSelection("Your selection: ");
                 //3. Processing selection
                 if(!serviceProvider.GetService<IUserInterface<object>>().ProcessSelection(input)) break;
-            }
-            
+            }         
         }
-
     }
 }

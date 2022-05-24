@@ -32,7 +32,18 @@ namespace NewCRM.Controllers
 
         public void OnDelete(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //Call to service
+                _customerService.DeleteCustomer(id);
+                //Render to view
+                Console.WriteLine("Successfully delete customer have id: " + id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                //throw new NotImplementedException();
+            }
         }
 
         public void OnDetails(int id)
@@ -59,7 +70,7 @@ namespace NewCRM.Controllers
                 //Render to view
                 View.AllCustomer.Instance.Show(customers);
             }
-            catch
+            catch (Exception e)
             {
                 //Console.WriteLine("Error when get Customer");
                 //throw new NotImplementedException();
@@ -77,8 +88,9 @@ namespace NewCRM.Controllers
             {
                 //Request infomation from view
                 var customer = View.CreateUpdateCustomer.Instance.Request();
+                customer.customerID = id;
                 //Call to service
-                _customerService.UpdateCustomer(id, customer);
+                _customerService.UpdateCustomer(customer);
                 //Render to view
                 View.CreateUpdateCustomer.Instance.Show(customer);
             }
