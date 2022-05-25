@@ -7,17 +7,16 @@ namespace NewCRM.View
     {
         private readonly ICustomerController _customerController;
         private readonly IContactAddressController _contactAddressController;
-        public MainMenu
-        (
+        public MainMenu(
             ICustomerController customerController,
             IContactAddressController contactAddressController
-        )
+            )
         {
             _customerController = customerController;
             _contactAddressController = contactAddressController;
         }
 
-        //Show main menu
+        #region Show
         public void Show(object entity)
         {
             Console.WriteLine("Menu:");
@@ -30,96 +29,84 @@ namespace NewCRM.View
             Console.WriteLine("7. Update Contact Address for an existing  Customer");
             Console.WriteLine("8. Delete Contact Address for an existing  Customer");
         }
+        #endregion
 
-        //Process input selection
+        #region InputSelection
         public string InputSelection(string output)
         {
             Console.Write(output + ": ");
             return Console.ReadLine();
         }
+        #endregion
 
-        //Process selection
-        public bool ProcessSelection(string input)
+        #region ProcessSelection
+        public int ProcessSelection(string input)
         {
             switch (input)
             {
-                //Define method view list customer
+                // Define method view list customer
                 case "1":
                     _customerController.OnGet();
-                    if (ConfirmContinue()) return true;
+                    if (ConfirmContinue()) return 1;
                     break;
-                //Define method view detail an existing customer
+
+                // Define method view detail an existing customer
                 case "2":
-                    var id = InputSelection("Enter ID Customer: ");
-                    if (ValidateID(id) == -1) return true;
-                    else _customerController.OnDetails(ValidateID(id));
-                    if (ConfirmContinue()) return true;
+                    _customerController.OnDetails();
+                    if (ConfirmContinue()) return 1;
                     break;
-                //Define method add a new customer
+
+                // Define method add a new customer
                 case "3":
                     _customerController.OnCreate();
-                    if (ConfirmContinue()) return true;
+                    if (ConfirmContinue()) return 1;
                     break;
-                //Define method edit an existing customer
+
+                // Define method edit an existing customer
                 case "4":
-                    id = InputSelection("Enter ID Customer: ");
-                    if (ValidateID(id) == -1) return true;
-                    _customerController.OnUpdate(ValidateID(id));
-                    if (ConfirmContinue()) return true;
+                    _customerController.OnUpdate();
+                    if (ConfirmContinue()) return 1;
                     break;
-                //Define method delete an existing customer
+
+                // Define method delete an existing customer
                 case "5":
-                    id = InputSelection("Enter ID Customer: ");
-                    if (ValidateID(id) == -1) return true;
-                    _customerController.OnDelete(ValidateID(id));
-                    if (ConfirmContinue()) return true;
+                    _customerController.OnDelete();
+                    if (ConfirmContinue()) return 1;
                     break;
-                //Define method add a new contact address for an existing customer
+
+                // Define method add a new contact address for an existing customer
                 case "6":
                     _contactAddressController.OnCreate();
-                    if (ConfirmContinue()) return true;
+                    if (ConfirmContinue()) return 1;
                     break;
-                //Define method edit contact address for an existing customer
+
+                // Define method edit contact address for an existing customer
                 case "7":
-                    id = InputSelection("Enter ID Customer: ");
-                    if (ValidateID(id) == -1) return true;
-                    _contactAddressController.OnUpdate(ValidateID(id));
-                    if (ConfirmContinue()) return true;
+                    _contactAddressController.OnUpdate();
+                    if (ConfirmContinue()) return 1;
                     break;
-                //Define method delete contact address for an existing customer
+
+                // Define method delete contact address for an existing customer
                 case "8":
-                    //if (DeleteContactAddress.Instance.View()) return true;
+                    _contactAddressController.OnDelete();
+                    if (ConfirmContinue()) return 1;
                     break;
-                //Choice the option does not contain in menu
+
+                // Choice the option does not contain in menu
                 default:
                     Console.WriteLine("Error");
-                    Console.WriteLine("Do you want to continues: ");
-                    string confirm = Console.ReadLine();
-                    if (confirm == "1") return true;
+                    string confirm = InputSelection("Do you want to continues: ");
+                    if (confirm == "1") return 1;
                     break;
             }
-            return false;
-        }
-        public int ValidateID(string id)
-        {
-            if (int.TryParse(id, out int parseId))
-            {
-                return parseId;
-            }
-            else
-            {
-                Console.WriteLine("Invalid ID!");
-                Console.WriteLine("");
-                Console.WriteLine("");
-            }
-            return -1;
+            return 0;
         }
         public bool ConfirmContinue()
         {
-            Console.WriteLine("Do you want to continues: ");
-            string confirm = Console.ReadLine();
+            string confirm = InputSelection("Do you want to continues? (1.Yes, 2.No)");
             if (confirm == "1") return true;
             return false;
         }
+        #endregion
     }
 }

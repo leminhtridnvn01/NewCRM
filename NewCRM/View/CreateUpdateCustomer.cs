@@ -19,13 +19,31 @@ namespace NewCRM.View
             }
             private set { }
         }
+
+        #region Show
+        public void Show(Customer customer)
+        {
+            Console.WriteLine("Successfully");
+        }
+        #endregion
+
+        #region InputSelection
+        public string InputSelection(string output)
+        {
+            Console.Write(output + ": ");
+            return Console.ReadLine();
+        }
+
         public Customer Request()
         {
+            // Request customer info
             var customer = new Customer();
             Console.WriteLine("Information of Customer");
             customer.name = InputSelection("Name: ");
             customer.yearOfBirth = InputSelection("Year Of Birth: ");
-            foreach(string contact in Enum.GetNames(typeof(AddressType)))
+
+            //Request contact info
+            foreach (string contact in Enum.GetNames(typeof(AddressType)))
             {
                 var contactAddress = new ContactAddress();
                 Console.WriteLine(contact + " Address");
@@ -36,23 +54,16 @@ namespace NewCRM.View
                 if (contactAddress.address == "" && contactAddress.email == "" && contactAddress.phone == "") continue;
                 customer.Contact.Add(contactAddress);
             }
+
             return customer;
         }
-        public void Show(Customer customer)
-        {
-            Console.WriteLine("Successfully");
-        }
-        public string InputSelection(string output)
-        {
-            Console.Write(output + ": ");
-            return Console.ReadLine();
-        }
+        #endregion
 
-        public bool ProcessSelection(string input)
+        #region ProcessSelection
+        public int ProcessSelection(string input)
         {
             throw new NotImplementedException();
         }
-
-        
+        #endregion
     }
 }

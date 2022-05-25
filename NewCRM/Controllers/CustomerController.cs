@@ -1,5 +1,4 @@
-﻿using NewCRM.Databases.Entities;
-using NewCRM.Services;
+﻿using NewCRM.Services;
 using System;
 
 namespace NewCRM.Controllers
@@ -7,98 +6,117 @@ namespace NewCRM.Controllers
     public class CustomerController : ICustomerController
     {
         private readonly ICustomerService _customerService;
-        public CustomerController(
-            ICustomerService customerService)
+        public CustomerController(ICustomerService customerService)
         {
             _customerService = customerService;
         }
+
+        #region Create
         public void OnCreate()
         {
             try
             {
-                //Request infomation from view
+                // Request infomation from view
                 var customer = View.CreateUpdateCustomer.Instance.Request();
-                //Call to service
+
+                // Call to service
                 _customerService.CreateCustomer(customer);
-                //Render to view
+
+                // Render to view
                 View.CreateUpdateCustomer.Instance.Show(customer);
             }
             catch(Exception e)
             {
-                //Console.WriteLine("Something no ok detail Customer: " + e);
-                //throw new NotImplementedException();
             }
         }
+        #endregion
 
-        public void OnDelete(int id)
+        #region Delete
+        public void OnDelete()
         {
             try
             {
-                //Call to service
+                // Request id from view
+                var idView = View.DetailCustomer.Instance.InputSelection("Enter ID Custormer");
+                if (View.Validate.Instance.ValidateID(idView) == -1) return;
+                var id = View.Validate.Instance.ValidateID(idView);
+
+                // Call to service
                 _customerService.DeleteCustomer(id);
-                //Render to view
+
+                // Render to view
                 Console.WriteLine("Successfully delete customer have id: " + id);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                //throw new NotImplementedException();
             }
         }
+        #endregion
 
-        public void OnDetails(int id)
+        #region Detail
+        public void OnDetails()
         {
             try
             {
-                //Call to service
+                // Request id from view
+                var idView = View.DetailCustomer.Instance.InputSelection("Enter ID Custormer");
+                var id = View.Validate.Instance.ValidateID(idView);
+                if ( id == -1) return;
+
+                // Call to service
                 var customer = _customerService.GetDetailCustomer(id);
-                //Render to view
+
+                // Render to view
                 View.DetailCustomer.Instance.Show(customer);
             }
             catch (Exception e)
             {
-                //Console.WriteLine("Error when get detail Customer");
             }
         }
+        #endregion
 
+        #region GetList
         public void OnGet()
         {
             try
             {
-                //Call to service
+                // Call to service
                 var customers = _customerService.GetAllCustomer();
-                //Render to view
+
+                // Render to view
                 View.AllCustomer.Instance.Show(customers);
             }
             catch (Exception e)
             {
-                //Console.WriteLine("Error when get Customer");
-                //throw new NotImplementedException();
+
             }
         }
+        #endregion
 
-        public void OnPost()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnUpdate(int id)
+        #region Update
+        public void OnUpdate()
         {
             try
             {
-                //Request infomation from view
+                // Request infomation from view
+                var idView = View.CreateUpdateCustomer.Instance.InputSelection("Enter ID Custormer");
+                var id = View.Validate.Instance.ValidateID(idView);
+                if ( id == -1) return;
                 var customer = View.CreateUpdateCustomer.Instance.Request();
                 customer.customerID = id;
-                //Call to service
+
+                // Call to service
                 _customerService.UpdateCustomer(customer);
-                //Render to view
+
+                // Render to view
                 View.CreateUpdateCustomer.Instance.Show(customer);
             }
             catch(Exception e)
             {
                 Console.WriteLine(e);
-                //throw new NotImplementedException();
             }
         }
+        #endregion
     }
 }

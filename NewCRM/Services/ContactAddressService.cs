@@ -1,10 +1,5 @@
 ﻿using NewCRM.Databases.Entities;
 using NewCRM.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NewCRM.Services
 {
@@ -20,22 +15,37 @@ namespace NewCRM.Services
             _customerRepository = customerRepository;
             _contactAddressRepository = contactAddressRepository;
         }
+
+        #region CreateContactAddress
         public void CreateContactAddress(ContactAddress contactAddress, int idCustomer)
         {
+            // Add new contact to existing customer
             var customer = _customerRepository.GetDetails(idCustomer);
             customer.Contact.Add(contactAddress);
             contactAddress.customer = customer;
+
+            // Update customer
             _customerRepository.Update(customer);
         }
+        #endregion
 
-        public void DeleteContactAddress(int id)
+        #region DeleteContactAddress
+        public void DeleteContactAddress(int idCustomer, int index)
         {
-            throw new NotImplementedException();
+            var idContacts = _contactAddressRepository.GetListIDContactByIDCustomer(idCustomer);
+            _contactAddressRepository.Delete(idContacts[index-1]);
         }
+        #endregion
 
-        public void UpdateContactAddress(ContactAddress customer, int idCustomer)
+        #region UpdateContactAddress
+        public void UpdateContactAddress(int idCustomer, ContactAddress contact, ContactAddress newContact)
         {
-            throw new NotImplementedException();
+            // ID for new contact
+            newContact.contactID = contact.contactID;
+
+            // Update contact
+            _contactAddressRepository.Update(newContact);
         }
+        #endregion
     }
 }

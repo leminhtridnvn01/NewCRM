@@ -18,11 +18,16 @@ namespace NewCRM.View
             }
             private set { }
         }
+
+        #region Show
         public void Show(Customer customer)
         {
+            // Show customer info
             Console.WriteLine("ID: " + customer.customerID);
             Console.WriteLine("Name: " + customer.name);
             Console.WriteLine("Age: " + customer.yearOfBirth);
+
+            // Show contact info
             foreach (ContactAddress contact in customer.Contact)
             {
                 Console.WriteLine(contact.addressType.ToString() + " Address");
@@ -32,14 +37,21 @@ namespace NewCRM.View
                 Console.WriteLine("");
             }
         }
+        #endregion
+
+        #region InputSelection
         public string InputSelection(string output)
         {
-            throw new NotImplementedException();
+            Console.Write(output + ": ");
+            return Console.ReadLine();
         }
+        #endregion
 
-        public bool ProcessSelection(string input)
+        #region ProcessSelection
+        public int ProcessSelection(string input)
         {
             throw new NotImplementedException();
         }
+        #endregion
     }
 }

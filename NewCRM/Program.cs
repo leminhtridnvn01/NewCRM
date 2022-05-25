@@ -4,21 +4,15 @@ using NewCRM.Databases.Entities;
 using NewCRM.Repositories;
 using NewCRM.Services;
 using NewCRM.View;
-using System;
 using System.Collections.Generic;
 
 namespace NewCRM
 {
     class Program
     {
-        private readonly IUserInterface<object> _mainMenu;
-        public Program(IUserInterface<object> mainMenu)
-        {
-            _mainMenu = mainMenu;
-        }
         public static void Main(string[] args)
         {
-            //DI register
+            // DI register
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IUserInterface<object>, MainMenu >()
                 .AddSingleton<IUserInterface<List<Customer>>, AllCustomer >()
@@ -31,15 +25,18 @@ namespace NewCRM
                 .AddSingleton<IContactAddressService, ContactAddressService>()
                 .AddSingleton<IContactAddressRepository<ContactAddress>, ContactAddressRepository<ContactAddress>>()
                 .BuildServiceProvider();
+
+            // Menu
             while (true)
             {
-                //1. Show main menu
-                var i = serviceProvider.GetService<CustomerService>();
+                // 1. Show main menu
                 serviceProvider.GetService<IUserInterface<object>>().Show(null);
-                //2. Input seletion
+
+                // 2. Input seletion
                 var input = serviceProvider.GetService<IUserInterface<object>>().InputSelection("Your selection: ");
-                //3. Processing selection
-                if(!serviceProvider.GetService<IUserInterface<object>>().ProcessSelection(input)) break;
+
+                // 3. Processing selection
+                if(serviceProvider.GetService<IUserInterface<object>>().ProcessSelection(input) == 0) break;
             }         
         }
     }

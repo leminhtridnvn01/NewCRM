@@ -1,9 +1,4 @@
 ﻿using NewCRM.Databases.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NewCRM.Services
 {
@@ -11,9 +6,11 @@ namespace NewCRM.Services
     {
         //1. Service create contact
         public void CreateContactAddress(ContactAddress contact, int idCustomer);
+
         //2. Service update contact
-        public void UpdateContactAddress(ContactAddress contact, int idCustomer);
+        public void UpdateContactAddress(int idCustomer, ContactAddress contact, ContactAddress newContact);
+
         //3. Service delete contact
-        public void DeleteContactAddress(int id);
+        public void DeleteContactAddress(int idCustomer, int index);
     }
 }

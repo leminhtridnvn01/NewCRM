@@ -1,10 +1,6 @@
 ﻿using NewCRM.Databases.Entities;
 using NewCRM.Databases.Enums;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NewCRM.View
 {
@@ -24,23 +20,21 @@ namespace NewCRM.View
             private set { }
         }
 
+        #region Show
+        public void Show(ContactAddress entity)
+        {
+            Console.WriteLine("Successfully");
+        }
+        #endregion
+
+        #region InputSelection
         public string InputSelection(string output)
         {
             Console.Write(output + ": ");
             return Console.ReadLine();
         }
 
-        public bool ProcessSelection(string input)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Show(ContactAddress entity)
-        {
-            Console.WriteLine("Successfully");
-        }
-
-        public (ContactAddress, int) Request()
+        public ContactAddress Request()
         {
             var contactAddress = new ContactAddress();
             Console.WriteLine("Information of Contact Address");
@@ -48,8 +42,16 @@ namespace NewCRM.View
             contactAddress.address = InputSelection("Address: ");
             contactAddress.email = InputSelection("Email: ");
             contactAddress.phone = InputSelection("Phone: ");
-            int id = Convert.ToInt32(InputSelection("CustomerID: "));
-            return (contactAddress, id);
+            return contactAddress;
         }
+        #endregion
+
+        #region ProcessSelection
+        public int ProcessSelection(string input)
+        {
+            var intInput = View.Validate.Instance.ValidateID(input);
+            return intInput;
+        }
+        #endregion
     }
 }

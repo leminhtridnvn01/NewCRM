@@ -2,10 +2,6 @@
 using NewCRM.Repositories;
 using NewCRM.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NewCRM.Controllers
 {
@@ -17,93 +13,113 @@ namespace NewCRM.Controllers
         public ContactAddressController(
             ICustomerService customerService,
             IContactAddressService contactAddressService,
-            IContactAddressRepository<ContactAddress> contacAddressRepository)
+            IContactAddressRepository<ContactAddress> contacAddressRepository
+            )
         {
             _customerService = customerService;
             _contactAddressService = contactAddressService;
             _contacAddressRepository = contacAddressRepository;
         }
+
+        #region Create
         public void OnCreate()
         {
             try
             {
-                //Request infomation from view
-                var (contactAddress, idCustomer) = View.CreateUpdateContactAddress.Instance.Request();
-                //Call to service
-                _contactAddressService.CreateContactAddress(contactAddress, idCustomer);
-                //Render to view
+                // Request infomation from view
+                var idView = View.CreateUpdateCustomer.Instance.InputSelection("Enter ID Custormer");
+                if (View.Validate.Instance.ValidateID(idView) == -1) return;
+                var id = View.Validate.Instance.ValidateID(idView);
+                var contactAddress = View.CreateUpdateContactAddress.Instance.Request();
+
+                // Call to service
+                _contactAddressService.CreateContactAddress(contactAddress, id);
+
+                // Render to view
                 View.CreateUpdateContactAddress.Instance.Show(contactAddress);
             }
             catch (Exception e)
             {
-                //Console.WriteLine("Something no ok detail Customer: " + e);
-                //throw new NotImplementedException();
             }
         }
+        #endregion
 
-        public void OnCreate(int idCustomer)
+        #region Delete
+        public void OnDelete()
         {
             try
             {
-                //Request infomation from view
-                var customer = View.CreateUpdateCustomer.Instance.Request();
+                // Request id customer form view
+                var idView = View.CreateUpdateCustomer.Instance.InputSelection("Enter ID Custormer");
+                var id = View.Validate.Instance.ValidateID(idView);
+                if (id == -1) return;
+
+                // Get customer detail
+                var customer = _customerService.GetDetailCustomer(id);
+
+                // Render contact infomation from view
+                View.DetailCustomer.Instance.Show(customer);
+
+                // Request infomation from view
+                Console.Write("Choose index: ");
+                var index = Convert.ToInt32(Console.ReadLine());
                 //Call to service
-                _customerService.CreateCustomer(customer);
-                //Render to view
-                View.CreateUpdateCustomer.Instance.Show(customer);
+                _contactAddressService.DeleteContactAddress(id, index);
+
+                // Render to view
+                Console.WriteLine("Successfully delete contact");
             }
             catch (Exception e)
             {
-                //Console.WriteLine("Something no ok detail Customer: " + e);
-                //throw new NotImplementedException();
             }
         }
+        #endregion
 
-        public void OnDelete(int id)
+        #region Detail
+        public void OnDetails()
         {
             throw new NotImplementedException();
         }
+        #endregion
 
-        public void OnDetails(int id)
-        {
-            throw new NotImplementedException();
-        }
-
+        #region Get
         public void OnGet()
         {
             throw new NotImplementedException();
         }
+        #endregion
 
-        public void OnPost()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnUpdate(int id)
+        #region Update
+        public void OnUpdate()
         {
             try
             {
-                //get customer detail
+                // Request id customer form view
+                var idView = View.CreateUpdateCustomer.Instance.InputSelection("Enter ID Custormer");
+                var id = View.Validate.Instance.ValidateID(idView);
+                if (id == -1) return;
+
+                // Get customer detail
                 var customer = _customerService.GetDetailCustomer(id);
-                //Render contact infomation from view
+
+                // Render contact infomation from view
                 View.DetailCustomer.Instance.Show(customer);
-                //Request infomation from view
+
+                // Request infomation from view
                 Console.Write("Choose index: ");
                 var index = Convert.ToInt32(Console.ReadLine());
                 var newContact = View.CreateUpdateContactAddress.Instance.Request();
-                //get contact by index
-                var contact = customer.Contact[index];
-                contact.addressType = newContact.
-                //Call to service
-                _contactAddressService.UpdateContactAddress(customer, customer.customerID);
-                //Render to view
+
+                // Call to service
+                _contactAddressService.UpdateContactAddress(id, customer.Contact[index - 1], newContact);
+
+                // Render to view
                 View.CreateUpdateCustomer.Instance.Show(customer);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                //throw new NotImplementedException();
             }
         }
+        #endregion
     }
 }
